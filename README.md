@@ -1,4 +1,4 @@
-# Tableau-ETL-PythonDash
+# Tableau-ETL-PythonDash: Python Lib, R-Shiny etc
 what did Tableau borrow sth from informatic/other ETL?
 Maestro is self-service ETL, Dash/D3 etc improve Tableau BI presentation
 Exercise Shares
