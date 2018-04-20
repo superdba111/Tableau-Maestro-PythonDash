@@ -1,4 +1,7 @@
 # Tableau-ETL-PythonDash: Python Lib, R-Shiny etc
+# Tableau is a great tool for what happened before but if you want to know why did happened? what will it happen? what to make it better
+# then we have to go to Machine/Deep Learning for the answers, the good thing is that we can creat the story and integred with Python/R codes to viz all, this is very exciting!
+
 what did Tableau borrow sth from informatic/other ETL?
 Maestro is self-service ETL, Dash/D3 etc improve Tableau BI presentation
 Exercise Shares
