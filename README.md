@@ -11,7 +11,7 @@
 I uploaded all raw data files over github, Can you try them and see if you can do by yourself?
 
 Recommendation by using tricks of PPT and D3 as well as JavaScripts etc
-1. very good design using colors and smart of trick by using PPT blank circle---https://public.tableau.com/profile/nina.lindell#!/vizhome/Birds_13/TurkeyVulturesMigration
+1. very good design using colors and smart trick by using PPT blank circle---https://public.tableau.com/profile/nina.lindell#!/vizhome/Birds_13/TurkeyVulturesMigration
 
 2. https://public.tableau.com/profile/peiyun.shen#!/vizhome/DDvs_ST1/Dashboard2
 
