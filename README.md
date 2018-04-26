@@ -4,7 +4,7 @@
 # Exercise Share (I cannot publish the company dashboards I did lots before)
 1. ViolaChart---https://public.tableau.com/profile/maxwellli#!/vizhome/ViolaCoreChart/SymptomsofWealthInequality
 2. SankyChart---https://public.tableau.com/profile/maxwellli#!/vizhome/TitanicSankyChart/TitanicPassengerSurvivalbyPortofEmbarkationandTicketClass
-3. Calculate Licenses---save licenses fee for the company--https://public.tableau.com/profile/maxwellli#!/vizhome/EPDMLicenseUsedMonthly/LicenseUsedinDetail1
+3. Calculate Licenses---save tons licenses fee for the company, can you get same license number as I did? https://public.tableau.com/profile/maxwellli#!/vizhome/EPDMLicenseUsedMonthly/LicenseUsedinDetail1
 4. Survey Likert Chart for any Survey template---https://public.tableau.com/profile/maxwellli#!/vizhome/SurveyLikertChart_0/Survey--LikertScaleChartbyCustomersType
 .................
 
