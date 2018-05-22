@@ -10,6 +10,7 @@ http://blog.yingyouli.com/2017/10/tableau-data-lineage-rowcolumn-security.html
 2. SankyChart---https://public.tableau.com/profile/maxwellli#!/vizhome/TitanicSankyChart/TitanicPassengerSurvivalbyPortofEmbarkationandTicketClass
 3. Calculate Licenses---save tons licenses fee for the company, can you get same license number as I did? https://public.tableau.com/profile/maxwellli#!/vizhome/EPDMLicenseUsedMonthly/LicenseUsedinDetail1
 4. Survey Likert Chart for any Survey template---https://public.tableau.com/profile/maxwellli#!/vizhome/SurveyLikertChart_0/Survey--LikertScaleChartbyCustomersType
+5. what is your finding? by python calculation and machine learning---https://public.tableau.com/profile/maxwellli#!/vizhome/ex2_28/Whatisyourfinding
 .................
 
 I uploaded all raw data files over github, Can you try them and see if you can do by yourself?
@@ -19,6 +20,4 @@ Recommendation by using tricks of PPT and D3 as well as JavaScripts etc
 
 2. Shen Peiyun---https://public.tableau.com/profile/peiyun.shen#!/vizhome/DDvs_ST1/Dashboard2
 
-3. Young Song---https://public.tableau.com/en-us/s/gallery/emergence-superbugs?gallery=votd
-
-4. Shen Peiyun ---https://public.tableau.com/profile/peiyun.shen#!/vizhome/CountryFlags_0/CountryFlags
+3. Shen Peiyun ---https://public.tableau.com/profile/peiyun.shen#!/vizhome/CountryFlags_0/CountryFlags
