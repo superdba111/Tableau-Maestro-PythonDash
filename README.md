@@ -11,6 +11,7 @@ http://blog.yingyouli.com/2017/10/tableau-data-lineage-rowcolumn-security.html
 3. Calculate Licenses---save tons licenses fee for the company, can you get same license number as I did? https://public.tableau.com/profile/maxwellli#!/vizhome/EPDMLicenseUsedMonthly/LicenseUsedinDetail1
 4. Survey Likert Chart for any Survey template---https://public.tableau.com/profile/maxwellli#!/vizhome/SurveyLikertChart_0/Survey--LikertScaleChartbyCustomersType
 5. what is your finding? by python calculation and machine learning---https://public.tableau.com/profile/maxwellli#!/vizhome/ex2_28/Whatisyourfinding
+6. How to add info in your map? ---https://public.tableau.com/profile/maxwellli#!/vizhome/map1_80/Story1
 6. D3 with Tableau ---
 .................
 
