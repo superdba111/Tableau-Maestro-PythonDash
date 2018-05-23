@@ -3,7 +3,9 @@
 ### then we have to go to Machine/Deep Learning for the answers, the good thing is that we can creat the story and integrated with Python/R codes to viz all, this is very exciting!
 
 please see my blog about any BI tool as the following
-http://blog.yingyouli.com/2017/10/tableau-data-lineage-rowcolumn-security.html
+http://blog.yingyouli.com/2017/10/tableau-data-lineage-rowcolumn-security.html, 
+one example(Last 30, 60 , 90 days to show data)---http://blog.yingyouli.com/2016/06/tableau-last-30-60-90-days-to-show-data.html
+performance tunning ---there are some examples in my blog, here is one about server--http://blog.yingyouli.com/2017/11/deeply-understand-tableau-server.html 
 
 ### Exercise Share (I cannot publish the company dashboards I did lots before)
 1. ViolaChart---https://public.tableau.com/profile/maxwellli#!/vizhome/ViolaCoreChart/SymptomsofWealthInequality
