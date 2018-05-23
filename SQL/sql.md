@@ -1,6 +1,8 @@
 #SQL is Fundamentals of DSE and any IT/Business People; you are welcome to use my docker for your leetcode sql handson practices(
 docker pull maxwelllee/mysql, the answers of the scirpts are inside the docker container)
 
+Please use build-sql-interview.docx based on the container I provided for you (by running docker pull maxwelllee/mysql), then do your sql query interview questions
+
 About SQL, go to my blog as the following links
 
 1. DW SQL consideration ---http://blog.yingyouli.com/2018/05/data-lake-dim-tables-design-issues.html
