@@ -1,5 +1,5 @@
 # Tableau-ETL-PythonDash: Python Lib, R-Shiny D3 etc
-### Tableau is a great tool for what happened before but if you want to know why did it happen? what will it happen? what to make it better
+### Tableau is a great tool for what happened before but if you want to know why did it happen? what will it happen? what to make it better?
 ### then we have to go to Machine/Deep Learning for the answers, the good thing is that we can creat the story and integrated with Python/R codes to viz all, this is very exciting!
 
 please see my blog about any BI tool as the following
