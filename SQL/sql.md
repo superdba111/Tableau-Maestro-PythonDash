@@ -1,5 +1,5 @@
-#SQL is Fundamentals of DSE and any IT/Business People; you are welcome to use my docker for your leetcode sql handson practices
-docker pull maxwelllee/mysql
+#SQL is Fundamentals of DSE and any IT/Business People; you are welcome to use my docker for your leetcode sql handson practices(
+docker pull maxwelllee/mysql, the answers of the scirpts are inside the docker container)
 
 About SQL, go to my blog as the following links
 
