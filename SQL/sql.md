@@ -3,6 +3,8 @@ docker pull maxwelllee/mysql, the answers of the scirpts are inside the docker c
 
 Please use build-sql-interview.docx based on the container I provided for you (by running docker pull maxwelllee/mysql), then do your sql query interview questions
 
+SQL is ve ry userful tool for Ops, please see two example for Oracle ERP I used before for daily monitoring, ebs-collection1.sql and ebs-real2.sql
+
 About SQL, go to my blog as the following links
 
 1. DW SQL consideration ---http://blog.yingyouli.com/2018/05/data-lake-dim-tables-design-issues.html
