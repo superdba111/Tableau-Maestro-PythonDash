@@ -19,11 +19,10 @@ performance tunning ---there are some examples in my blog, here is one about ser
 
 I uploaded all raw data files over github, Can you try them and see if you can do by yourself?
 
-Recommendation by using tricks of PPT and D3 as well as JavaScripts etc
-0. from Boeing, https://public.tableau.com/en-us/s/gallery/boeing-commercial-market-outlook-2018-2037?edition=pro&lang=en-us&version=2018.2.0&__full-version=20182.18.0627.2230&platform=windows&status=buy
+Generic Tableau developer –drag and drop plus simple calculation etc
+Tableau API(REST/Extension/document/JavaScript)
+Tableau calculation by programming(Python/R/JavaScript)
+Tableau Web data Connector 
+Tableau Prep builder(clean and Prepare data, nice to integration inside Tableau server(version>2019.1.x))
+ Integrate and embed analytics within a custom portal by using modern web technology like bootstrap/CSS/D3/C3/Django VIZ library/Python Viz library etc 
 
-1. very good design using colors and smart trick by using PPT blank circle---Nina Lindell, https://public.tableau.com/profile/nina.lindell#!/vizhome/Birds_13/TurkeyVulturesMigration
-
-2. Shen Peiyun---https://public.tableau.com/profile/peiyun.shen#!/vizhome/DDvs_ST1/Dashboard2
-
-3. Shen Peiyun ---https://public.tableau.com/profile/peiyun.shen#!/vizhome/CountryFlags_0/CountryFlags
