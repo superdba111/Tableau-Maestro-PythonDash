@@ -1,6 +1,7 @@
 ### Tableau-ETL-PythonDash: Python Lib, R-Shiny D3 etc
 
 ### Generic Tableau developer –drag and drop plus simple calculation etc
+### Advanced Tableau developer should be able to do the following 5
 ### 1. Tableau API(REST/Extension/document/JavaScript)
 ### 2. Tableau calculation by programming(Python/R/JavaScript)
 ### 3. Tableau Web data Connector 
