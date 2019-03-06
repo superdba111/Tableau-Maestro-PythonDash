@@ -1,11 +1,11 @@
-###Tableau-ETL-PythonDash: Python Lib, R-Shiny D3 etc
+### Tableau-ETL-PythonDash: Python Lib, R-Shiny D3 etc
 
-##Generic Tableau developer –drag and drop plus simple calculation etc
-##1. Tableau API(REST/Extension/document/JavaScript)
-##2. Tableau calculation by programming(Python/R/JavaScript)
-##3. Tableau Web data Connector 
-##4. Tableau Prep builder(clean and Prepare data, nice to integration inside Tableau server(version>2019.1.x))
-##5. Integrate and embed analytics within a custom portal by using modern web technology like bootstrap/CSS/D3/C3/Django VIZ library/Python #Viz library etc 
+### Generic Tableau developer –drag and drop plus simple calculation etc
+### 1. Tableau API(REST/Extension/document/JavaScript)
+### 2. Tableau calculation by programming(Python/R/JavaScript)
+### 3. Tableau Web data Connector 
+### 4. Tableau Prep builder(clean and Prepare data, nice to integration inside Tableau server(version>2019.1.x))
+### 5. Integrate and embed analytics within a custom portal by using modern web technology like bootstrap/CSS/D3/C3/Django VIZ library/Python #Viz library etc 
 
 ### Tableau is a great tool for what happened before but if you want to know why did it happen? what will it happen? what to make it better?
 ### then we have to go to Machine/Deep Learning for the answers, the good thing is that we can creat the story and integrated with Python/R codes to viz all, this is very exciting!
