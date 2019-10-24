@@ -1,0 +1,389 @@
+/*
+Review the essentials
+In this exercise you must prepare the data you need (title & description) to run a promotion for the store's Italian & French language films from 2005.
+
+To practice the essentials you will prepare this query one step at a time
+
+*/
+
+--Return the title and description from the film table. Make sure to alias this table AS f.
+SELECT title, description
+FROM film AS f
+
+--Use an INNER JOIN to bring in language data about your films using the language_id as the join column.
+
+SELECT title, description
+FROM film AS f
+INNER JOIN language AS l
+  ON f.language_id = l.language_id
+
+--Use the IN command to limit the results where the language name is either Italian or French.
+--Ensure only the release_year of the films is 2005.
+
+SELECT title, description
+FROM film AS f
+INNER JOIN language AS l
+  ON f.language_id = l.language_id
+WHERE l.name IN ('Italian' , 'French')
+  AND release_year = 2005 ;
+
+
+-------------------------install database https://github.com/devrimgunduz/pagila----------------------------------------------------------------------
+
+Practice the essentials
+In this exercise you are preparing list of your top paying active customers. The data you will need are the names of the customer sorted by the amount they paid.
+
+Return the first_name, last_name and amount.
+INNER JOIN the tables you need for this query: payment and customer using the customer_id for the join.
+Ensure only active customers are returned.
+Sort the results in DESCending order by the amount paid
+
+------------------------------------------------------------------------------------------------------------
+SELECT c.first_name,
+	   c.last_name,
+       p.amount
+FROM payment AS p
+INNER JOIN customer AS c
+  ON p.customer_id = c.customer_id
+WHERE c.active='true'
+ORDER BY p.amount DESC;
+
+or if failed using the following
+
+SELECT c.first_name,
+	   c.last_name,
+       p.amount
+FROM payment AS p
+INNER JOIN customer AS c
+  ON p.customer_id = c.customer_id
+WHERE c.active=1
+ORDER BY p.amount DESC;
+
+
+/***
+Transform numeric & strings
+For this exercise you are planning to run a 50% off promotion for films released prior to 2006. 
+To prepare for this promotion you will need to return the films that qualify for this promotion, to make these titles easier to read you will convert them all to lower case. 
+You will also need to return both the original_rate and the sale_rate
+
+Return the LOWER-case titles of the films.
+Return the original rental_rate and the 50% discounted sale_rate by multiplying rental_rate by 0.5.
+Ensure only films prior to 2006 are considered for this promotion
+
+***/
+
+
+SELECT LOWER(title) AS title, 
+  rental_rate AS original_rate, 
+  rental_rate * 0.5 AS sale_rate 
+FROM film
+-- Filter for films prior to 2006
+WHERE release_year < 2006;
+
+
+--EXTRACT the DAY from payment_date and return this column AS the payment_day
+SELECT payment_date,
+  EXTRACT('DAY' FROM payment_date) AS payment_day 
+FROM payment;
+
+--EXTRACT the YEAR from payment_date and return this column AS the payment_year
+SELECT payment_date,
+  EXTRACT('YEAR' FROM payment_date) AS payment_year 
+FROM payment;
+
+--EXTRACT the HOUR from payment_date and return this column AS the payment_hour
+SELECT payment_date,
+  EXTRACT('HOUR' FROM payment_date) AS payment_hour 
+FROM payment;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+Aggregating finances
+In this exercise you would like to learn more about the differences in payments between the customers who are active and those who are not.
+
+Identify the number of active and inactive customers by COUNT()ing them.
+Find out the differences in their average payments by using AVG().
+Find out the differences in their total payments by using SUM().
+Ensure the aggregate functions GROUP BY whether customer payments are active
+
+SELECT active, 
+       COUNT(active) AS num_active, 
+       AVG(amount) AS avg_amount, 
+       SUM(amount) AS total_amount
+FROM payment AS p
+INNER JOIN customer AS c
+  ON p.customer_id = c.customer_id
+GROUP BY active;
+
+----------------------------------------------------
+
+Aggregating strings
+You are planning to update your storefront window to demonstrate how family-friendly and multi-lingual your DVD collection is. 
+To prepare for this you need to prepare a comma-separated list G-rated film titles by language released in 2010.
+
+Return a column with a list of comma-separated film titles by using the STRING_AGG() function.
+Limit the results to films that have a release_year of 2010 AND have a rating of 'G'.
+Ensure that the operation is grouped by the language name
+
+Return a column with a list of comma-separated film titles by using the STRING_AGG() function.
+Limit the results to films that have a release_year of 2010 AND have a rating of 'G'.
+Ensure that the operation is grouped by the language name
+
+SELECT name, 
+	STRING_AGG(title, ',') AS film_titles
+FROM film AS f
+INNER JOIN language AS l
+  ON f.language_id = l.language_id
+WHERE release_year = 2010
+  AND rating = 'G'
+GROUP BY name;
+
+-----------------------------------------------------------------------------------------------
+
+--Use LIMIT to return all columns for the first 10 rows for the payment table
+SELECT * 
+FROM payment
+limit 10;
+
+--Use LIMIT to return all columns for the 10 highest amount paid in the payments
+SELECT * 
+FROM payment
+order by amount desc
+LIMIT 10;
+
+--------------------------------------------------------------------------------------------------------
+
+What tables are in your database?
+You don't have to rely solely on knowing what tables exist. Instead, you can query the pg_catalog.pg_tables to list all of the tables that exist in your database.
+
+Of course, this will list every table, including system tables so ideally, you want to limit your results to the schema where your data resides which in this case is 'public'.
+
+List the tables that exist in your database by querying the table: pg_catalog.pg_tables.
+Filter the query to ensure the result contains entries where the schemaname is 'public'
+
+SELECT * 
+FROM pg_catalog.pg_tables
+where schemaname = 'public';
+
+----------------------------------------------------------------------------------------------
+Determine the monthly income
+Now that you know how to find the table that you need to answer a question and how to use SQL to answer that question let's practice these skills end-to-end.
+
+How much does this business makes per month?
+
+First, you will need to use pg_catalog.pg_tables to find the possible tables and determine which tables & columns you need to answer that question. 
+Second, you will leverage the tools you learned in the previous chapter to prepare the answer
+
+Run the first section of code to list your tables.
+Explore the tables to determine which you need to answer the question.
+Once you've figured out which table to use, fill in the blank in this statement SELECT * FROM ___ LIMIT 10
+
+
+-- List all tables in the public schema
+SELECT * 
+FROM pg_catalog.pg_tables
+WHERE schemaname = 'public';
+
+-- Explore the tables and fill in the correct one
+SELECT * 
+FROM payment 
+LIMIT 10;
+
+-- Prepare the result
+SELECT EXTRACT(MONTH FROM payment_date) AS month, 
+       SUM(amount) AS total_payment
+FROM payment 
+GROUP BY month;
+
+------------------------------------------------------------------------------------------------
+What columns are in your database?
+Just like pg_catalog.pg_tables can be incredibly helpful for listing all the tables in your database, 
+information_schema.columns can be used to list the columns of these tables. In this exercise, you will combine these system tables to get a list of all of the columns 
+for all your tables (in the 'public' schema)
+
+-- Select all columns from the information_schema.columns table
+select * 
+from information_schema.columns;
+
+SELECT table_name, column_name
+FROM information_schema.columns
+WHERE table_schema = 'public';
+
+-------------------------------------------------------------------------------------
+A VIEW of all your columns
+In this exercise you will create a new tool for finding the tables and columns you need. Using the system table information_schema.columns you will concatenate the list of each table's columns into a single entry.
+
+Once you've done this you will make this query easily reusable by creating a new VIEW for it called table_columns.
+
+SELECT table_name, 
+	   STRING_AGG(column_name, ', ') AS columns
+FROM information_schema.columns
+WHERE table_schema = 'public'
+GROUP BY table_name;
+
+-- Create a new view called table_columns
+CREATE VIEW table_columns AS 
+SELECT table_name, 
+	   STRING_AGG(column_name, ', ') AS columns
+FROM information_schema.columns
+WHERE table_schema = 'public'
+GROUP BY table_name;
+
+-- Query the newly created view table_columns
+select * from table_columns;
+
+-------------------------------------------------------------------
+
+The average length of films by category
+From the previous exercise you've learned that the tables film and category have the necessary information to calculate the average movie length for every category. 
+You've also learned that they share a common field film_id which can be used to join these tables.
+ Now you will use this information to query a list of average length for each category
+
+Calculate the average length and return this column as average_length.
+Join the two tables film and category.
+Ensure that the result is in ascending order by the average length of each category
+
+-- Calculate the average_length for each category
+SELECT category, 
+	   AVG(length) AS average_length
+FROM film AS f
+-- Join the tables film & category
+INNER JOIN category AS c
+  ON f.film_id = c.film_id
+GROUP BY category
+-- Sort the results in ascending order by length
+ORDER BY average_length;
+
+----------------------------------------------------------------------------------------------------
+
+Build the entity relationship diagram
+Using the skills you learned throughout this chapter you will build an entity relationship diagram to trace and connect the tables needed to answer the following question:
+
+Which films are most frequently rented?
+
+You are looking for a list of film titles that you have in your store, Next, you need records of film's that were rented.
+
+SELECT title, COUNT(title)
+FROM film AS f
+INNER JOIN inventory AS i
+  ON f.film_id = i.film_id
+INNER JOIN rental AS r
+  ON i.inventory_id = r.inventory_id
+GROUP BY title
+ORDER BY count DESC;
+
+-----------------------------------------------------------------------------------------------------------------
+
+-- Create a new table called oscars
+CREATE TABLE oscars (
+    title VARCHAR,
+    award VARCHAR
+);
+
+-- Insert the data into the oscars table
+INSERT INTO oscars (title, award)
+VALUES
+('TRANSLATION SUMMER', 'Best Film'),
+('DORADO NOTTING', 'Best Film'),
+('MARS ROMAN', 'Best Film'),
+('CUPBOARD SINNERS', 'Best Film'),
+('LONELY ELEPHANT', 'Best Film');
+
+-- Confirm the table was created and is populated
+SELECT * 
+FROM oscars;
+
+-----------------------------------------------------------------------------------------------------------------------------
+SELECT *
+FROM film
+WHERE rating IN ('G', 'PG');
+
+-- Create a new table named family_films using this query
+create table family_films AS
+SELECT *
+FROM film
+WHERE rating IN ('G', 'PG');
+
+-- Increase rental_rate by 0.5 in the film table
+UPDATE film
+SET rental_rate = rental_rate + 0.5;
+
+-- Increase rental_rate by one dollar for R-rated movies
+UPDATE film
+SET rental_rate = rental_rate + 1
+WHERE rating = 'R';
+
+--Write a query to SELECT the film_id for the actors with the following 5 last names WILLIS, CHASE, WINSLET, GUINESS, HUDSON
+SELECT film_id 
+FROM actor AS a
+INNER JOIN film_actor AS f
+   ON a.actor_id = f.actor_id
+WHERE last_name IN ('WILLIS', 'CHASE', 'WINSLET', 'GUINESS', 'HUDSON');
+
+--Use the query you created in the previous step to decrease the rental_rate by 1 dollar for all of the film_id that match.
+
+UPDATE film
+SET rental_rate = rental_rate - 1
+WHERE film_id IN
+  (SELECT film_id from actor AS a
+   INNER JOIN film_actor AS f
+      ON a.actor_id = f.actor_id
+   WHERE last_name IN ('WILLIS', 'CHASE', 'WINSLET', 'GUINESS', 'HUDSON'));
+
+-- Delete films that cost most than 25 dollars
+DELETE FROM film
+WHERE replacement_cost > 25;
+
+--
+-- Identify the film_id of all films that have a rating of R or NC-17
+SELECT film_id
+FROM film
+WHERE rating IN ('R', 'NC-17');
+
+-- Use the list of film_id values to DELETE all R & NC-17 rated films from inventory.
+DELETE FROM inventory
+WHERE film_id IN (
+  SELECT film_id FROM film
+  WHERE rating IN ('R', 'NC-17')
+);
+
+-- Delete records from the `film` table that are either rated as R or NC-17.
+DELETE FROM film
+WHERE rating IN ('R', 'NC-17');
+
+SELECT r.customer_id, r.rental_date, r.return_date 
+FROM rental AS r
+/* Inventory is used as an intermediate table for 
+uniting the rental and film tables */
+INNER JOIN inventory AS i
+  ON r.inventory_id = i.inventory_id
+INNER JOIN film AS f
+  ON i.film_id = f.film_id
+WHERE f.length < 90;
+
+SELECT title, 
+	   rating 
+FROM film 
+WHERE rating IN ('G','PG', 'R');
+
+
+SELECT category AS film_category, 
+       AVG(length) AS average_length
+FROM film AS f
+INNER JOIN category AS c
+  ON f.film_id = c.film_id
+WHERE release_year BETWEEN 2005 AND 2010
+GROUP BY category;
+
+SELECT first_name, 
+       last_name, 
+       email 
+FROM rental AS r 
+INNER JOIN customer AS c 
+   ON r.customer_id = c.customer_id;
+
+
+
+
+
+
+

@@ -1,0 +1,310 @@
+--starting service postgresql 11
+--then running sql 
+
+-- Select all columns, 
+ SELECT * 
+ FROM INFORMATION_SCHEMA.TABLES
+ -- Filter by schema
+ WHERE table_schema = 'public';
+
+
+
+-- Select all columns
+ SELECT * 
+ FROM INFORMATION_SCHEMA.COLUMNS 
+ WHERE table_name = 'actor';
+
+
+-- Get the column name and data type
+SELECT
+ 	column_name, 
+    data_type,
+	character_maximum_length
+-- From the system database information schema
+FROM INFORMATION_SCHEMA.COLUMNS 
+-- For the customer table
+WHERE table_name = 'customer';
+
+SELECT
+ 	-- Select the rental and return dates
+	rental_date,
+	return_date,
+ 	-- Calculate the expected_return_date
+	rental_date + INTERVAL '3 days' AS expected_return_date
+FROM rental;
+
+--Select the title and special features from the film table and compare the results between the two columns.
+-- Select the title and special features column 
+SELECT 
+  title, 
+  special_features 
+FROM film;
+
+--Select all films that have a special feature Trailers by filtering on the first index of the special_features ARRAY
+--Remember that array indexes start at 1
+
+-- Select the title and special features column 
+SELECT 
+  title, 
+  special_features 
+FROM film
+-- Use the array index of the special_features column
+WHERE special_features[1] = 'Trailers';
+
+--Now let's select all films that have Deleted Scenes in the second index of the special_features ARRAY
+-- Select the title and special features column 
+SELECT 
+  title, 
+  special_features 
+FROM film
+-- Use the array index of the special_features column
+WHERE special_features[2] = 'Deleted Scenes';
+
+/*
+Searching an ARRAY with ANY
+As we saw in the video, PostgreSQL also provides the ability to filter results by searching for values in an ARRAY. 
+The ANY function allows you to search for a value in any index position of an ARRAY. Here's an example.
+
+WHERE 'search text' = ANY(array_name)
+When using the ANY function, the value you are filtering on appears on the left side of the equation with the name of the ARRAY column as the parameter in the ANY function.
+*/
+SELECT
+  title, 
+  special_features 
+FROM film 
+-- Modify the query to use the ANY function 
+WHERE 'Trailers' = ANY (special_features);
+
+
+/*
+Searching an ARRAY with @>
+The contains operator @> operator is alternative syntax to the ANY function and matches data in an ARRAY using the following syntax.
+
+WHERE array_name @> ARRAY['search text'] :: type[]
+So let's practice using this operator in the exercise below.
+*/
+SELECT 
+  title, 
+  special_features 
+FROM film 
+-- Filter where special_features contains 'Deleted Scenes'
+WHERE special_features @> ARRAY['Deleted Scenes'];
+
+/*
+Adding and subtracting date and time values
+In this exercise, you will calculate the actual number of days rented as well as the true expected_return_date by using the rental_duration column from the film table along 
+with the familiar rental_date from the rental table.
+
+This will require that you dust off the skills you learned from prior courses on how to join two or more tables together. To select columns from both the film and rental tables 
+in a single query, we'll need to use the inventory table to join these two tables together 
+since there is no explicit relationship between them. Let's give it a try!
+*/
+
+
+--Calculate the number of days_rented using the rental and return dates.
+SELECT f.title, f.rental_duration,
+    -- Calculate the number of days rented
+    r.return_date - r.rental_date AS days_rented
+FROM film AS f
+     INNER JOIN inventory AS i ON f.film_id = i.film_id
+     INNER JOIN rental AS r ON i.inventory_id = r.inventory_id
+ORDER BY f.title;
+
+--Now use the AGE() function to calculate the days_rented
+SELECT f.title, f.rental_duration,
+    -- Calculate the number of days rented
+	AGE(r.return_date, r.rental_date) AS days_rented
+FROM film AS f
+	INNER JOIN inventory AS i ON f.film_id = i.film_id
+	INNER JOIN rental AS r ON i.inventory_id = r.inventory_id
+-- Only include rentals that have already been returned
+WHERE r.return_date is not null 	
+ORDER BY f.title;
+
+
+/*
+INTERVAL arithmetic
+If you were running a real DVD Rental store, there would be times when you would need to determine what film titles were currently out for rental with customers. 
+In the previous exercise, we saw that some of the records in the results had a NULL value for the return_date. This is because the rental was still outstanding.
+
+Each rental in the film table has an associated rental_duration column which represents the number of days that a DVD can be rented by a customer before it is considered late. 
+In this example, you will exclude films that have a NULL value for the return_date and also convert the rental_duration to an INTERVAL type. Here's a reminder of one method
+ for performing this conversion.
+
+SELECT INTERVAL '1' day * timestamp '2019-04-10 12:34:56'
+*/
+
+--Convert rental_duration by multiplying it with a 1 day INTERVAL
+Subtract the rental_date from the return_date to calculate the number of days_rented.
+Exclude rentals with a NULL value for return_date
+
+SELECT
+    f.title,
+ 	-- Convert the rental_duration to an interval
+    INTERVAL '1' day * f.rental_duration AS rental_duration,
+ 	-- Calculate the days rented as we did previously
+    r.return_date - r.rental_date AS days_rented
+FROM film AS f
+    INNER JOIN inventory AS i ON f.film_id = i.film_id
+    INNER JOIN rental AS r ON i.inventory_id = r.inventory_id
+-- Filter the query to exclude outstanding rentals
+WHERE r.return_date IS NOT NULL
+ORDER BY f.title;
+
+/*
+Calculating the expected return date
+So now that you've practiced how to add and subtract timestamps and perform relative calculations using intervals, let's use those new skills to calculate the actual expected return date of a specific rental. As you've seen in previous exercises, the rental_duration is the number of days allowed for a rental before it's considered late. To calculate the expected_return_date you will want to use the rental_duration and add it to the rental_date.
+
+*/
+
+--Convert rental_duration by multiplying it with a 1-day INTERVAL.
+Add it to the rental date.
+
+SELECT
+    f.title,
+	r.rental_date,
+    f.rental_duration,
+    -- Add the rental duration to the rental date
+    INTERVAL '1' day * f.rental_duration + r.rental_date AS expected_return_date,
+    r.return_date
+FROM film AS f
+    INNER JOIN inventory AS i ON f.film_id = i.film_id
+    INNER JOIN rental AS r ON i.inventory_id = r.inventory_id
+ORDER BY f.title;
+
+
+/*
+Current timestamp functions
+Use the console to explore the NOW(), CURRENT_TIMESTAMP, CURRENT_DATE and CURRENT_TIME functions and their outputs to determine which of the following is not correct?
+*/
+
+select NOW(), CURRENT_TIMESTAMP, CURRENT_DATE, CURRENT_TIME
+
+Possible Answers
+NOW() returns the current date and time as a timestamp with timezone.
+CURRENT_TIMESTAMP returns the current timestamp without timezone.  <--not currect
+CURRENT_DATE returns the current date value without a time value.
+CURRENT_TIME returns the current time value without a date value.
+
+--Select the current timestamp without a timezone
+SELECT CAST( NOW() AS timestamp )
+
+SELECT 
+	-- Select the current date
+	CURRENT_DATE,
+    -- CAST the result of the NOW() function to a date
+    CAST( NOW() AS date )
+
+--Select the current timestamp without timezone
+SELECT CURRENT_TIMESTAMP::timestamp AS right_now;
+
+SELECT
+	CURRENT_TIMESTAMP(0)::timestamp AS right_now,
+    interval '5' day + CURRENT_TIMESTAMP(0) AS five_days_from_now;
+
+
+/*
+Using EXTRACT
+You can use EXTRACT() and DATE_PART() to easily create new fields in your queries by extracting sub-fields from a source timestamp field.
+
+Now suppose you want to produce a predictive model that will help forecast DVD rental activity by day of the week. 
+You could use the EXTRACT() function with the dow field identifier in our query to create a new field called dayofweek as a sub-field of the rental_date column from the rental table.
+
+You can COUNT() the number of records in the rental table for a given date range and aggregate by the newly created dayofweek column.
+*/
+
+--Get the day of the week from the rental_date column.
+SELECT 
+  -- Extract day of week from rental_date
+  EXTRACT(dow FROM rental_date) AS dayofweek 
+FROM rental 
+LIMIT 100;
+
+--Count the total number of rentals by day of the week.
+-- Extract day of week from rental_date
+SELECT 
+  EXTRACT(dow FROM rental_date) AS dayofweek, 
+  -- Count the number of rentals
+  COUNT(rental_id) as rentals 
+FROM rental 
+GROUP BY 1;
+
+
+/*
+Using DATE_TRUNC
+The DATE_TRUNC() function will truncate timestamp or interval data types to return a timestamp or interval at a specified precision. 
+The precision values are a subset of the field identifiers that can be used with the EXTRACT() and DATE_PART() functions. 
+DATE_TRUNC() will return an interval or timestamp rather than a number. For example
+
+SELECT DATE_TRUNC('month', TIMESTAMP '2005-05-21 15:30:30');
+Result: 2005-05-01 00;00:00
+
+Now, let's experiment with different precisions and ultimately modify the queries from the previous exercises to aggregate rental activity.
+*/
+
+-- Truncate rental_date by year
+SELECT DATE_TRUNC('year', rental_date) AS rental_year
+FROM rental;
+
+-- Truncate rental_date by month
+SELECT DATE_TRUNC('month', rental_date) AS rental_month
+FROM rental;
+
+-- Truncate rental_date by day of the month 
+SELECT DATE_TRUNC('day', rental_date) AS rental_day
+FROM rental;
+
+/*
+Use EXTRACT() to create a column based on rental_date aliased as dayofweek.
+Use INTERVAL to select records for the 90 day period starting on 5/1/2005.
+*/
+SELECT 
+  -- Extract the day of week date part from the rental_date
+  EXTRACT(dow FROM rental_date) as dayofweek, 
+  AGE(return_date, rental_date) as rental_days 
+FROM rental AS r 
+WHERE 
+  -- Use an INTERVAL for the upper bound of the rental_date 
+  rental_date BETWEEN CAST('2005-05-01' AS DATE) 
+   AND CAST('2005-05-01' AS DATE) + INTERVAL '90 day';
+
+
+
+
+--Finally, count the total number of rentals by rental_day and alias it as rentals
+
+SELECT 
+  DATE_TRUNC('day', rental_date) AS rental_day,
+  -- Count total number of rentals 
+  COUNT(DATE_TRUNC('day', rental_date)) AS rentals 
+FROM rental
+GROUP BY 1;
+
+
+--Finally, use a CASE statement and DATE_TRUNC() to create a new column called past_due which will be TRUE if the rental_days is greater than the rental_duration otherwise, it will be FALSE
+SELECT 
+  c.first_name || ' ' || c.last_name AS customer_name, 
+  f.title, 
+  r.rental_date, 
+  -- Extract the day of week date part from the rental_date
+  EXTRACT(dow FROM r.rental_date) as dayofweek, 
+  AGE(r.return_date, r.rental_date) as rental_days, 
+  -- Use DATE_TRUNC to get days from the AGE function
+  CASE WHEN DATE_TRUNC('day', AGE(r.return_date, r.rental_date)) > 
+    f.rental_duration * INTERVAL '1' day 
+  THEN TRUE 
+  ELSE FALSE END AS past_due 
+FROM 
+  film AS f 
+  INNER JOIN inventory AS i 
+  	ON f.film_id = i.film_id 
+  INNER JOIN rental AS r 
+  	ON i.inventory_id = r.inventory_id 
+  INNER JOIN customer AS c 
+  	ON c.customer_id = r.customer_id 
+WHERE 
+  -- Use an INTERVAL for the upper bound of the rental_date 
+  r.rental_date BETWEEN CAST('2005-05-01' AS DATE) 
+  AND CAST('2005-05-01' AS DATE) + INTERVAL '90 day';
+
+
