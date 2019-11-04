@@ -1,0 +1,101 @@
+
+the index is used or not , check v$index_usage_info and dba_index_usage 
+(Index usage is tracked in memory, with top-level usage information visible using the V$INDEX_USAGE_INFO view)
+The DBA_INDEX_USAGE view displays object-level index usage once it has been flushed to disk
+
+
+
+postgresql--find the missing index
+SELECT
+  relname                                               AS TableName,
+  to_char(seq_scan, '999,999,999,999')                  AS TotalSeqScan,
+  to_char(idx_scan, '999,999,999,999')                  AS TotalIndexScan,
+  to_char(n_live_tup, '999,999,999,999')                AS TableRows,
+  pg_size_pretty(pg_relation_size(relname :: regclass)) AS TableSize
+FROM pg_stat_all_tables
+WHERE schemaname = 'public'
+      AND 50 * seq_scan > idx_scan -- more then 2%
+      AND n_live_tup > 10000
+      AND pg_relation_size(relname :: regclass) > 5000000
+ORDER BY relname ASC;
+
+check pg_stat_all_indexes
+
+
+find index usage and index size
+SELECT
+    pt.tablename AS TableName
+    ,t.indexname AS IndexName
+    ,to_char(pc.reltuples, '999,999,999,999') AS TotalRows
+    ,pg_size_pretty(pg_relation_size(quote_ident(pt.tablename)::text)) AS TableSize
+    ,pg_size_pretty(pg_relation_size(quote_ident(t.indexrelname)::text)) AS IndexSize
+    ,to_char(t.idx_scan, '999,999,999,999') AS TotalNumberOfScan
+    ,to_char(t.idx_tup_read, '999,999,999,999') AS TotalTupleRead
+    ,to_char(t.idx_tup_fetch, '999,999,999,999') AS TotalTupleFetched
+FROM pg_tables AS pt
+LEFT OUTER JOIN pg_class AS pc 
+    ON pt.tablename=pc.relname
+LEFT OUTER JOIN
+( 
+    SELECT 
+        pc.relname AS TableName
+        ,pc2.relname AS IndexName
+        ,psai.idx_scan
+        ,psai.idx_tup_read
+        ,psai.idx_tup_fetch
+        ,psai.indexrelname 
+    FROM pg_index AS pi
+    JOIN pg_class AS pc 
+        ON pc.oid = pi.indrelid
+    JOIN pg_class AS pc2 
+        ON pc2.oid = pi.indexrelid
+    JOIN pg_stat_all_indexes AS psai 
+        ON pi.indexrelid = psai.indexrelid 
+)AS T
+    ON pt.tablename = T.TableName
+WHERE pt.schemaname='public'
+ORDER BY 1;
+
+
+
+
+
+The hash join is an example of a join algorithm and is used in the implementation of a relational database management system.
+
+Hash joins are typically more efficient than nested loops joins, except when the probe side of the join is very small. However, hash joins can only be used to compute equijoins.
+
+The task of a join algorithm is to find, for each distinct value of the join attribute, the set of tuples in each relation which have that value.
+
+Hash joins require an equijoin predicate (a predicate comparing records from one table with those from the other table using a conjunction of equality operators '=' on one or more columns).
+
+
+
+A nested loop join is a naive algorithm that joins two sets by using two nested loops.[1] Join operations are important for database management.
+
+
+
+
+
+
+
+https://devcenter.heroku.com/articles/postgresql-indexes
+Index type
+
+B-Tree is the default that you get when you do CREATE INDEX. Virtually all databases will have some B-tree indexes. B-trees attempt to remain balanced, 
+with the amount of data in each branch of the tree being roughly the same. Therefore the number of levels that must be traversed to find rows is always in the same ballpark.
+ B-tree indexes can be used for equality and range queries efficiently. They can operate against all datatypes, and can also be used to retrieve NULL values. 
+B-trees are designed to work very well with caching, even when only partially cached.
+
+Hash Indexes pre-Postgres 10 are only useful for equality comparisons, but you pretty much never want to use them since they are not transaction safe, 
+need to be manually rebuilt after crashes, and are not replicated to followers, so the advantage over using a B-Tree is rather small.
+ In Postgres 10 and above, hash indexes are now write-ahead logged and replicated to followers.
+
+
+Generalized Inverted Indexes (GIN) are useful when an index must map many values to one row, whereas B-Tree indexes are optimized for when a row has a single key value. 
+GINs are good for indexing array values as well as for implementing full-text search.
+
+Generalized Search Tree (GiST) indexes allow you to build general balanced tree structures, and can be used for operations beyond equality and range comparisons. 
+They are used to index the geometric data types, as well as full-text search.
+
+A partial index covers just a subset of a table’s data. It is an index with a WHERE clause. The idea is to increase the efficiency of the index by reducing its size. A smaller index takes less storage, is easier to maintain, and is faster to scan.
+
