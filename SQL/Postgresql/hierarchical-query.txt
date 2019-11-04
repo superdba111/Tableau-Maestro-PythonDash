@@ -1,0 +1,107 @@
+Oracle---https://livesql.oracle.com/apex/livesql/file/tutorial_GQMLEEPG5ARVSIFGQRD3SES92.html
+
+----connect by root -------------------------------------------------
+select level, employee_id, first_name, last_name, manager_id 
+from   employees
+start  with manager_id is null
+connect by prior employee_id = manager_id;
+
+
+-------------add level ------------------------
+
+select level, employee_id, 
+       lpad ( ' ', level, ' ' ) || first_name || ' ' || last_name name, manager_id 
+from   employees
+start  with manager_id is null
+connect by prior employee_id = manager_id;
+
+
+-------------------
+Recursive With
+Recursive with doesn't have an in-built equivalent of level. You need to build your own. You can do this by selecting the value 1 in the base query. And incrementing it by one in the recursive part. For example:
+
+with org_chart (
+  employee_id, first_name, last_name, manager_id, lvl
+) as (
+  select employee_id, first_name, last_name, manager_id, 1 lvl
+  from   employees
+  where  manager_id is null
+  union  all
+  select e.employee_id, e.first_name, e.last_name, e.manager_id, oc.lvl + 1
+  from   org_chart oc
+  join   employees e
+  on     e.manager_id = oc.employee_id
+)
+  select * from org_chart;
+As with connect by, you can use this pad out values in the final select.
+
+-------------------------------
+
+Sorting Output: Connect By
+When you build a hierarchical query, the database returns the rows in an order matching the tree structure.
+
+Connect by returns rows in depth-first search order. If you use a regular order by you'll lose this sort.
+
+But you can preserve the depth-first tree and sort rows with the same parent. You do this with the siblings clause of order by.
+
+So to show a manager's reports after them, sorting employees with the same manager by hire date (first to last), you can do:
+
+select level, employee_id, first_name, last_name, hire_date, manager_id 
+from   employees
+start  with manager_id is null
+connect by prior employee_id = manager_id
+order siblings by hire_date;
+
+---------------------------Depth-First Search------------------------------
+with org_chart (
+  employee_id, first_name, last_name, hire_date, manager_id, lvl
+) as (
+  select employee_id, first_name, last_name, hire_date, manager_id, 1 lvl
+  from   employees
+  where  manager_id is null
+  union  all
+  select e.employee_id, e.first_name, e.last_name, e.hire_date, e.manager_id, oc.lvl + 1
+  from   org_chart oc
+  join   employees e
+  on     e.manager_id = oc.employee_id
+) search depth first by hire_date set hire_seq
+  select * from org_chart
+  order  by hire_seq;
+
+--------------------------------------Breadth-First Search-------------------------------------
+with org_chart (
+  employee_id, first_name, last_name, hire_date, manager_id, lvl
+) as (
+  select employee_id, first_name, last_name, hire_date, manager_id, 1 lvl
+  from   employees
+  where  manager_id is null
+  union  all
+  select e.employee_id, e.first_name, e.last_name, e.hire_date, e.manager_id, oc.lvl + 1
+  from   org_chart oc
+  join   employees e
+  on     e.manager_id = oc.employee_id
+) search breadth first by hire_date set hire_seq
+  select * from org_chart
+  order  by hire_seq;
+
+---------------------------------Displaying Tree Details: Recursive With-----------------------------------
+with org_chart (
+  employee_id, first_name, last_name, manager_id, root_emp, chart, lvl
+) as (
+  select employee_id, first_name, last_name, manager_id, 
+         last_name root_emp, last_name chart, 1 lvl
+  from   employees
+  where  manager_id is null
+  union  all
+  select e.employee_id, e.first_name, e.last_name, e.manager_id, 
+         oc.root_emp, oc.chart || ', ' || e.last_name, oc.lvl+1
+  from   org_chart oc
+  join   employees e
+  on     e.manager_id = oc.employee_id
+) search depth first by employee_id set seq
+  select oc.*, 
+         case 
+           when lead ( lvl, 1, 1 ) over ( order by seq ) <= lvl then 'LEAF'
+         end is_leaf
+  from   org_chart oc;
+
